@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Presença - 15 Anos da Larissa</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #fdf6f9, #f2f2f2);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid #d8b2a4;
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            color: #b06044;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #555;
+        }
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #b06044;
+            margin-bottom: 20px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #b06044;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        button:hover:enabled {
+            background-color: #944e37;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            background-color: #b06044;
+            opacity: 0.8;
+            z-index: 9999;
+            border-radius: 50%;
+            animation: fall linear forwards;
+        }
+
+        .balloon {
+            position: fixed;
+            top: -100px;
+            width: 30px;
+            height: 40px;
+            background-color: #b06044;
+            border-radius: 50% 50% 50% 50%/60% 60% 40% 40%;
+            z-index: 9999;
+            animation: fallBalloon linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        @keyframes fallBalloon {
+            to {
+                transform: translateY(120vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="foto.png" alt="Foto da Aniversariante" class="profile-img">
+
+    <h1>Confirmação de Presença</h1>
+    <p>É com muito carinho que te convidamos para os <strong>15 anos da Larissa Napoli</strong>! </p>
+    <p><strong>Data:</strong> 29/08/2025<br>
+    <strong>Local:</strong> Buffet Mediterráneo - Rua Professor Pedreira de Freitas, 944<br>
+    <strong>Horário:</strong> 21h00</p>
+
+    <form id="rsvpForm">
+        <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+        
+        <textarea id="observacoes" name="observacoes" placeholder="Observações (opcional)"></textarea>
+        <button type="submit" id="botao">Confirmar Presença</button>
+    </form>
+
+    <p id="mensagem" class="success"></p>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwzq3ipW8yRwu5gWsWu4sYWI0YTY6h7inbTldVBWBGRAQkhuNTojxT2vGdOWh9DUFQa/exec'; 
+    const form = document.getElementById('rsvpForm');
+    const mensagem = document.getElementById('mensagem');
+    const botao = document.getElementById('botao');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        botao.disabled = true;
+        mensagem.textContent = "Enviando...";
+
+        const formData = new FormData(form);
+
+        fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => {
+                mensagem.textContent = "Obrigada por confirmar!";
+                form.reset();
+                soltarConfetesEBaloes();
+                botao.disabled = false;
+            })
+            .catch(error => {
+                mensagem.textContent = "Erro ao enviar. Tente novamente.";
+                console.error('Erro!', error.message);
+                botao.disabled = false;
+            });
+    });
+
+    function soltarConfetesEBaloes() {
+        for (let i = 0; i < 30; i++) {
+            criarConfete();
+        }
+        for (let i = 0; i < 10; i++) {
+            criarBalao();
+        }
+    }
+
+    function criarConfete() {
+        const confete = document.createElement('div');
+        confete.classList.add('confetti');
+        confete.style.left = Math.random() * 100 + 'vw';
+        const cores = ['#b06044', '#c0c0c0']; // rosé gold e prata
+        confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+        confete.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        document.body.appendChild(confete);
+        setTimeout(() => confete.remove(), 5000);
+    }
+
+    function criarBalao() {
+        const balao = document.createElement('div');
+        balao.classList.add('balloon');
+        balao.style.left = Math.random() * 100 + 'vw';
+        const cores = ['#b06044', '#c0c0c0']; // rosé gold e prata
+        balao.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+        balao.style.animationDuration = (Math.random() * 2 + 4) + 's';
+        document.body.appendChild(balao);
+        setTimeout(() => balao.remove(), 6000);
+    }
+</script>
+
+
+</body>
+</html>
